@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "OSINT": {
+      "source": "danielmiessler/personal_ai_infrastructure",
+      "sourceType": "github",
+      "skillPath": "Packs/Investigation/src/OSINT/SKILL.md",
+      "computedHash": "4f299c1cf1c01334754cb0ae722ca6ad84a801f1f1dd898f2322da2e2b75c732"
+    }
+  }
+}
