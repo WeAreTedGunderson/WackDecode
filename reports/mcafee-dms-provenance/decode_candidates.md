@@ -23,6 +23,8 @@ Candidates are rejected when they depend on private/leaked data, screenshot-only
 
 **Supporting sources:** `SRC-008`, `SRC-009`, `SRC-010`, `SRC-011`, `SRC-018`, `SRC-019`.
 
+**Current verification:** Direct Ethereum JSON-RPC lookup on 2026-05-24 returned transaction status `0x1`, `to: null`, contract address `0xcf8335727b776d190f9d15a54e6b9b9348439eee`, block `8943162`, timestamp `2019-11-16 07:25:23 UTC`, and block hash `0x8a62444d0d9f0f66d8bdbcf9e9faeeab23863463554551d68e4020b6043da5cc`.
+
 **Provenance rating:** High for contract identity and creation transaction. Low for any DMS payload interpretation.
 
 **What remains unverified:** No public source proves that the contract encodes a DMS payload, release key, or McAfee-controlled post-death trigger.

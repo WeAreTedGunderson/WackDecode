@@ -104,6 +104,7 @@ Observed facts:
 - getwhackd.org calls this the official WHACKD contract address.
 - CoinMarketCap lists the same contract and describes the 10% burn plus full burn mechanism.
 - Etherscan's contract-creation page shows one creation transaction on 2019-11-16, creating `Epstein`.
+- A direct Ethereum JSON-RPC receipt lookup for creation transaction `0x1bb323576cd7dcb12e9f8507a5e298a0136927a486f959e3984cb7cca21ed96b` returns status `0x1`, `to: null`, contract address `0xcf8335727b776d190f9d15a54e6b9b9348439eee`, block `8943162`, and block timestamp `2019-11-16 07:25:23 UTC`.
 - The public contract-source mirrors show an initial supply of `1,000,000,000 WHACKD` with 18 decimals.
 
 The simplified transfer logic:
@@ -376,7 +377,7 @@ Milestone 4: artifact lab
 - Official WHACKD site: https://getwhackd.org/
 - CoinMarketCap WHACKD page: https://coinmarketcap.com/currencies/whackd/
 - Etherscan official WHACKD token: https://etherscan.io/token/0xcf8335727b776d190f9d15a54e6b9b9348439eee
-- Etherscan WHACKD contract creation transactions: https://etherscan.io/txs?a=0xcf8335727b776d190f9d15a54e6b9b9348439eee&f=5
+- Etherscan WHACKD contract creation transaction: https://etherscan.io/tx/0x1bb323576cd7dcb12e9f8507a5e298a0136927a486f959e3984cb7cca21ed96b
 - Snowkid, "WHACKD - Token analysis": https://snowkidind.medium.com/whackd-token-analysis-223fa0843f74
 - Whackd/whackd-counter GitHub repo: https://github.com/Whackd/whackd-counter/
 - Bitcoin.com News, britbonglogpost/WHACKD coverage: https://news.bitcoin.com/mysterious-john-mcafee-website-appears-for-two-days-whackd-token-climbs-over-700/
@@ -385,4 +386,3 @@ Milestone 4: artifact lab
 - Swarm docs, chunk types: https://docs.ethswarm.org/docs/develop/tools-and-features/chunk-types/
 - Swarm docs, feeds: https://docs.ethswarm.org/docs/develop/tools-and-features/feeds/
 - Bee JS docs, SOC and feeds: https://bee-js.ethswarm.org/docs/soc-and-feeds/
-
