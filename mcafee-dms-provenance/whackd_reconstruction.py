@@ -3,8 +3,8 @@
 
 This is an Option 2 starter, not a decoder. It fetches ERC-20 Transfer logs for
 the official WHACKD contract, groups logs by transaction, decodes common ERC-20
-method selectors, and classifies burn candidates without assigning hidden-message
-meaning to any event.
+method selectors, optionally resolves internal token calls with RPC traces, and
+classifies burn candidates without assigning hidden-message meaning to any event.
 """
 
 from __future__ import annotations
@@ -111,6 +111,10 @@ def decode_selector(input_data: str | None) -> str:
     return SELECTORS.get(input_data[:10].lower(), input_data[:10].lower())
 
 
+def is_token_counter_method(method: str) -> bool:
+    return method in ("transfer(address,uint256)", "transferFrom(address,address,uint256)")
+
+
 def classify_contract_method(tx_to: str, input_data: str | None) -> tuple[str, str]:
     selector = decode_selector(input_data)
     if not tx_to:
@@ -139,6 +143,7 @@ def reconstruct_counter(tx_rows: list[dict]) -> list[dict]:
     random_value = 0
     certainty = "exact"
     rows = []
+    transfer_call_ordinal = 0
     transfer_ordinal = 0
     transfer_from_ordinal = 0
     for tx in tx_rows:
@@ -147,7 +152,9 @@ def reconstruct_counter(tx_rows: list[dict]) -> list[dict]:
         counter_action = "not_counter_relevant"
         certainty_before = certainty
         if method == "transfer(address,uint256)":
-            transfer_ordinal += 1
+            transfer_call_ordinal += 1
+            if tx["call_scope"] == "direct_contract_call":
+                transfer_ordinal += 1
             if random_value < 999:
                 random_value += 1
                 counter_action = "increment"
@@ -181,21 +188,25 @@ def reconstruct_counter(tx_rows: list[dict]) -> list[dict]:
                 "transaction_index": tx["transaction_index"],
                 "method": method,
                 "call_scope": tx["call_scope"],
-                "counter_relevant": method
-                in ("transfer(address,uint256)", "transferFrom(address,address,uint256)"),
-                "direct_transfer_ordinal": transfer_ordinal
+                "outer_method": tx.get("outer_method", ""),
+                "traced_token_method": tx.get("traced_token_method", ""),
+                "trace_status": tx.get("trace_status", ""),
+                "trace_token_call_count": tx.get("trace_token_call_count", ""),
+                "counter_relevant": is_token_counter_method(method),
+                "transfer_call_ordinal": transfer_call_ordinal
                 if method == "transfer(address,uint256)"
+                else "",
+                "direct_transfer_ordinal": transfer_ordinal
+                if method == "transfer(address,uint256)" and tx["call_scope"] == "direct_contract_call"
                 else "",
                 "transfer_from_ordinal": transfer_from_ordinal
                 if method == "transferFrom(address,address,uint256)"
                 else "",
                 "random_before": random_before
-                if method
-                in ("transfer(address,uint256)", "transferFrom(address,address,uint256)")
+                if is_token_counter_method(method)
                 else "",
                 "random_after": random_after
-                if method
-                in ("transfer(address,uint256)", "transferFrom(address,address,uint256)")
+                if is_token_counter_method(method)
                 else "",
                 "counter_action": counter_action,
                 "counter_certainty_before": certainty_before,
@@ -256,6 +267,122 @@ def normalize_logs(raw_logs: list[dict]) -> list[dict]:
     return normalized
 
 
+def extract_parity_trace_token_calls(trace_result: object) -> list[dict]:
+    token_calls = []
+    if not isinstance(trace_result, list):
+        return token_calls
+    for item in trace_result:
+        if not isinstance(item, dict):
+            continue
+        action = item.get("action") or {}
+        to_address = (action.get("to") or "").lower()
+        input_data = action.get("input") or ""
+        method = decode_selector(input_data)
+        if to_address == CONTRACT and is_token_counter_method(method):
+            token_calls.append(
+                {
+                    "method": method,
+                    "from_address": (action.get("from") or "").lower(),
+                    "to_address": to_address,
+                    "input": input_data,
+                    "trace_address": ".".join(str(part) for part in item.get("traceAddress", [])),
+                    "trace_type": item.get("type", ""),
+                }
+            )
+    return token_calls
+
+
+def extract_calltree_token_calls(call: object, prefix: str = "") -> list[dict]:
+    token_calls = []
+    if not isinstance(call, dict):
+        return token_calls
+    to_address = (call.get("to") or "").lower()
+    input_data = call.get("input") or ""
+    method = decode_selector(input_data)
+    if to_address == CONTRACT and is_token_counter_method(method):
+        token_calls.append(
+            {
+                "method": method,
+                "from_address": (call.get("from") or "").lower(),
+                "to_address": to_address,
+                "input": input_data,
+                "trace_address": prefix,
+                "trace_type": call.get("type", ""),
+            }
+        )
+    for index, child in enumerate(call.get("calls") or []):
+        child_prefix = f"{prefix}.{index}" if prefix else str(index)
+        token_calls.extend(extract_calltree_token_calls(child, child_prefix))
+    return token_calls
+
+
+def fetch_trace_token_calls(url: str, tx_hash: str) -> tuple[str, list[dict]]:
+    try:
+        trace_result = rpc_call(url, "trace_transaction", [tx_hash])
+        token_calls = extract_parity_trace_token_calls(trace_result)
+        return "trace_transaction_ok", token_calls
+    except Exception as parity_exc:
+        try:
+            debug_result = rpc_call(url, "debug_traceTransaction", [tx_hash, {"tracer": "callTracer"}])
+            token_calls = extract_calltree_token_calls(debug_result)
+            return "debug_callTracer_ok", token_calls
+        except Exception as debug_exc:
+            return f"trace_unavailable: {parity_exc}; {debug_exc}", []
+
+
+def resolve_external_token_calls(
+    url: str, txs: dict[str, dict], trace_mode: str
+) -> dict[str, dict]:
+    if trace_mode == "off":
+        return {}
+
+    trace_rows = {}
+    external_hashes = [
+        tx_hash
+        for tx_hash, tx in txs.items()
+        if tx["call_scope"] == "external_contract_call"
+    ]
+    for tx_hash in external_hashes:
+        status, token_calls = fetch_trace_token_calls(url, tx_hash)
+        if not token_calls:
+            if trace_mode == "required":
+                raise RuntimeError(f"No token trace calls found for {tx_hash}: {status}")
+            txs[tx_hash]["trace_status"] = status
+            txs[tx_hash]["trace_token_call_count"] = 0
+            trace_rows[tx_hash] = {"transaction_hash": tx_hash, "trace_status": status}
+            continue
+
+        if len(token_calls) == 1:
+            token_call = token_calls[0]
+            txs[tx_hash]["method"] = token_call["method"]
+            txs[tx_hash]["call_scope"] = "traced_internal_contract_call"
+            txs[tx_hash]["traced_token_method"] = token_call["method"]
+            txs[tx_hash]["trace_status"] = status
+            txs[tx_hash]["trace_token_call_count"] = 1
+            txs[tx_hash]["trace_address"] = token_call["trace_address"]
+            txs[tx_hash]["trace_from_address"] = token_call["from_address"]
+        else:
+            txs[tx_hash]["trace_status"] = f"{status}:multiple_token_calls"
+            txs[tx_hash]["trace_token_call_count"] = len(token_calls)
+            if trace_mode == "required":
+                raise RuntimeError(f"Multiple token trace calls found for {tx_hash}")
+
+        for index, token_call in enumerate(token_calls, start=1):
+            trace_rows[f"{tx_hash}:{index}"] = {
+                "transaction_hash": tx_hash,
+                "trace_status": status,
+                "trace_token_call_index": index,
+                "trace_token_call_count": len(token_calls),
+                "trace_address": token_call["trace_address"],
+                "trace_type": token_call["trace_type"],
+                "trace_from_address": token_call["from_address"],
+                "trace_to_address": token_call["to_address"],
+                "traced_token_method": token_call["method"],
+            }
+        time.sleep(0.2)
+    return trace_rows
+
+
 def fetch_blocks(url: str, block_numbers: list[int], batch_size: int) -> dict[int, dict]:
     blocks: dict[int, dict] = {}
     for i in range(0, len(block_numbers), batch_size):
@@ -286,8 +413,14 @@ def fetch_transactions(url: str, tx_hashes: list[str], batch_size: int) -> dict[
                 "from_address": (tx.get("from") or "").lower(),
                 "to_address": tx_to,
                 "method": method,
+                "outer_method": method,
                 "call_scope": call_scope,
                 "input": tx.get("input", ""),
+                "traced_token_method": "",
+                "trace_status": "not_requested",
+                "trace_token_call_count": "",
+                "trace_address": "",
+                "trace_from_address": "",
             }
         time.sleep(0.5)
     return txs
@@ -324,6 +457,16 @@ def main() -> int:
     parser.add_argument("--chunk-size", type=int, default=2_000)
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument(
+        "--trace-mode",
+        choices=("auto", "off", "required"),
+        default="auto",
+        help=(
+            "Resolve external-contract WHACKD log rows through trace_transaction "
+            "or debug_traceTransaction when available. 'auto' keeps running if "
+            "tracing is unavailable; 'required' fails on unresolved external rows."
+        ),
+    )
+    parser.add_argument(
         "--out-dir",
         type=Path,
         default=Path(__file__).resolve().parent / "option2-data",
@@ -344,6 +487,7 @@ def main() -> int:
     logs = normalize_logs(raw_logs)
     block_map = fetch_blocks(rpc_url, sorted({row["block_number"] for row in logs}), args.batch_size)
     tx_map = fetch_transactions(rpc_url, sorted({row["transaction_hash"] for row in logs}), args.batch_size)
+    trace_rows_by_key = resolve_external_token_calls(rpc_url, tx_map, args.trace_mode)
 
     for row in logs:
         row.update(block_map[row["block_number"]])
@@ -351,7 +495,10 @@ def main() -> int:
         row["tx_from_address"] = tx["from_address"]
         row["tx_to_address"] = tx["to_address"]
         row["method"] = tx["method"]
+        row["outer_method"] = tx["outer_method"]
         row["call_scope"] = tx["call_scope"]
+        row["traced_token_method"] = tx["traced_token_method"]
+        row["trace_status"] = tx["trace_status"]
 
     grouped = defaultdict(list)
     for row in logs:
@@ -371,6 +518,12 @@ def main() -> int:
                 "transaction_hash": tx_hash,
                 "method": tx["method"],
                 "call_scope": tx["call_scope"],
+                "outer_method": tx["outer_method"],
+                "traced_token_method": tx["traced_token_method"],
+                "trace_status": tx["trace_status"],
+                "trace_token_call_count": tx["trace_token_call_count"],
+                "trace_address": tx["trace_address"],
+                "trace_from_address": tx["trace_from_address"],
                 "tx_from_address": tx["from_address"],
                 "tx_to_address": tx["to_address"],
                 "transfer_log_count": len(tx_logs),
@@ -392,7 +545,10 @@ def main() -> int:
         "transaction_index",
         "log_index",
         "method",
+        "outer_method",
         "call_scope",
+        "traced_token_method",
+        "trace_status",
         "tx_from_address",
         "tx_to_address",
         "event",
@@ -407,6 +563,12 @@ def main() -> int:
         "transaction_hash",
         "method",
         "call_scope",
+        "outer_method",
+        "traced_token_method",
+        "trace_status",
+        "trace_token_call_count",
+        "trace_address",
+        "trace_from_address",
         "tx_from_address",
         "tx_to_address",
         "transfer_log_count",
@@ -422,7 +584,12 @@ def main() -> int:
         "transaction_index",
         "method",
         "call_scope",
+        "outer_method",
+        "traced_token_method",
+        "trace_status",
+        "trace_token_call_count",
         "counter_relevant",
+        "transfer_call_ordinal",
         "direct_transfer_ordinal",
         "transfer_from_ordinal",
         "random_before",
@@ -441,6 +608,19 @@ def main() -> int:
     write_csv(args.out_dir / "transfer_logs.csv", logs, log_fields)
     write_csv(args.out_dir / "transaction_summary.csv", tx_rows, tx_fields)
     write_csv(args.out_dir / "counter_reconstruction.csv", counter_rows, counter_fields)
+    trace_rows = list(trace_rows_by_key.values())
+    trace_fields = [
+        "transaction_hash",
+        "trace_status",
+        "trace_token_call_index",
+        "trace_token_call_count",
+        "trace_address",
+        "trace_type",
+        "trace_from_address",
+        "trace_to_address",
+        "traced_token_method",
+    ]
+    write_csv(args.out_dir / "trace_token_calls.csv", trace_rows, trace_fields)
     full_burn_rows = [
         row
         for row in counter_rows
@@ -462,14 +642,25 @@ def main() -> int:
         "external_contract_transaction_count": sum(
             1 for row in tx_rows if row["call_scope"] == "external_contract_call"
         ),
+        "traced_internal_contract_transaction_count": sum(
+            1 for row in tx_rows if row["call_scope"] == "traced_internal_contract_call"
+        ),
+        "trace_mode": args.trace_mode,
+        "trace_token_call_count": len(trace_rows),
         "counter_certainty": "uncertain_after_external_call"
         if any(row["call_scope"] == "external_contract_call" for row in tx_rows)
-        else "exact_for_direct_contract_calls",
+        else "exact_for_resolved_token_calls",
         "counter_relevant_transaction_count": sum(
             1 for row in counter_rows if row["counter_relevant"]
         ),
-        "direct_transfer_count": sum(
+        "token_transfer_count": sum(
             1 for row in counter_rows if row["method"] == "transfer(address,uint256)"
+        ),
+        "direct_transfer_count": sum(
+            1
+            for row in counter_rows
+            if row["method"] == "transfer(address,uint256)"
+            and row["call_scope"] == "direct_contract_call"
         ),
         "transfer_from_count": sum(
             1
