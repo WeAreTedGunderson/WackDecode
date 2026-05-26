@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="label" for="node" attr.name="label" attr.type="string"/>
+  <key id="node_type" for="node" attr.name="node_type" attr.type="string"/>
+  <key id="summary" for="node" attr.name="summary" attr.type="string"/>
+  <key id="relation" for="edge" attr.name="relation" attr.type="string"/>
+  <key id="provenance_role" for="edge" attr.name="provenance_role" attr.type="string"/>
+  <key id="confidence" for="edge" attr.name="confidence" attr.type="string"/>
+  <key id="source_ids" for="edge" attr.name="source_ids" attr.type="string"/>
+  <key id="notes" for="edge" attr.name="notes" attr.type="string"/>
+  <graph id="mcafee_dms_provenance" edgedefault="directed">
+    <node id="claim_dms_31tb">
+      <data key="label">McAfee 31+ terabyte DMS claim</data>
+      <data key="node_type">claim</data>
+      <data key="summary">Public claim that a data cache would be released if McAfee was arrested or disappeared.</data>
+    </node>
+    <node id="claim_whackd_suicide">
+      <data key="label">McAfee WHACKD suicide statement</data>
+      <data key="node_type">claim</data>
+      <data key="summary">Publicly reported 2019 statement linking 'suicide' denial language and WHACKD tattoo context.</data>
+    </node>
+    <node id="claim_instagram_q_dms">
+      <data key="label">Instagram Q post as DMS trigger</data>
+      <data key="node_type">claim</data>
+      <data key="summary">Post-death Q post and surrounding claims that it represented a DMS signal or key.</data>
+    </node>
+    <node id="claim_britbong_countdown">
+      <data key="label">britbonglogpost countdown as DMS artifact</data>
+      <data key="node_type">claim</data>
+      <data key="summary">Post-death website countdown tied publicly to WHACKD and McAfee speculation.</data>
+    </node>
+    <node id="claim_surfside_31tb">
+      <data key="label">Surfside 31TB tweet claim</data>
+      <data key="node_type">claim</data>
+      <data key="summary">Fabricated claim that McAfee said data was stored in the Surfside condo building.</data>
+    </node>
+    <node id="claim_copycat_whackd">
+      <data key="label">June 2021 copycat WHACKD token claims</data>
+      <data key="node_type">claim</data>
+      <data key="summary">Claims around later WHACKD-named contracts and zero-address activity as a DMS signal.</data>
+    </node>
+    <node id="claim_swarm_ipfs_payload">
+      <data key="label">Swarm/IPFS/Arweave payload-pointer theory</data>
+      <data key="node_type">claim</data>
+      <data key="summary">Theory that candidate strings could resolve to public decentralized-storage references.</data>
+    </node>
+    <node id="account_mcafee_twitter">
+      <data key="label">John McAfee public Twitter account reporting</data>
+      <data key="node_type">account</data>
+      <data key="summary">Media-reported McAfee Twitter posts; direct original tweet archives were not used as accepted candidate proof here.</data>
+    </node>
+    <node id="account_mcafee_instagram">
+      <data key="label">John McAfee Instagram account reporting</data>
+      <data key="node_type">account</data>
+      <data key="summary">Media-reported Instagram Q post after McAfee death.</data>
+    </node>
+    <node id="domain_getwhackd">
+      <data key="label">getwhackd.org</data>
+      <data key="node_type">domain</data>
+      <data key="summary">Public WHACKD website identifying the official contract address.</data>
+    </node>
+    <node id="domain_britbonglogpost">
+      <data key="label">britbonglogpost.com</data>
+      <data key="node_type">domain</data>
+      <data key="summary">Post-death domain associated with the 'CONTINGENCY PLAN ACTIVATED' countdown.</data>
+    </node>
+    <node id="contract_whackd_official">
+      <data key="label">Official WHACKD contract</data>
+      <data key="node_type">contract</data>
+      <data key="summary">0xCF8335727B776d190f9D15a54E6B9B9348439eEE, verified by public token/project sources.</data>
+    </node>
+    <node id="contract_whackd_copycat_2021">
+      <data key="label">Later WHACKD-named contract</data>
+      <data key="node_type">contract</data>
+      <data key="summary">A later WHACKD-like contract discussed in DMS speculation; not treated as official without separate proof.</data>
+    </node>
+    <node id="wallet_zero_address">
+      <data key="label">Ethereum zero address</data>
+      <data key="node_type">wallet</data>
+      <data key="summary">0x0000000000000000000000000000000000000000 burn address; not a human-controlled DMS wallet.</data>
+    </node>
+    <node id="tx_whackd_creation">
+      <data key="label">Official WHACKD creation transaction</data>
+      <data key="node_type">transaction</data>
+      <data key="summary">0x1bb323576cd7dcb12e9f8507a5e298a0136927a486f959e3984cb7cca21ed96b at block 8943162.</data>
+    </node>
+    <node id="file_surfside_fake_image">
+      <data key="label">Fabricated Surfside 31TB screenshot</data>
+      <data key="node_type">file</data>
+      <data key="summary">Image/tweet artifact debunked by PolitiFact.</data>
+    </node>
+    <node id="article_newsweek_q">
+      <data key="label">Newsweek Q/DMS article</data>
+      <data key="node_type">article</data>
+      <data key="summary">SRC-004, reporting on Q post and prior DMS claims.</data>
+    </node>
+    <node id="article_politifact_surfside">
+      <data key="label">PolitiFact Surfside fact check</data>
+      <data key="node_type">article</data>
+      <data key="summary">SRC-017, debunking fabricated Surfside 31TB tweet image.</data>
+    </node>
+    <node id="archive_britbong_20210624">
+      <data key="label">Wayback britbonglogpost 2021-06-24 capture</data>
+      <data key="node_type">archive</data>
+      <data key="summary">SRC-016, public archive capture of britbonglogpost.com.</data>
+    </node>
+    <node id="article_snowkid_medium">
+      <data key="label">Snowkid WHACKD token analysis</data>
+      <data key="node_type">article</data>
+      <data key="summary">SRC-012, useful community analysis with inferred labels.</data>
+    </node>
+    <node id="article_bitcoin_britbong">
+      <data key="label">Bitcoin.com britbonglogpost article</data>
+      <data key="node_type">article</data>
+      <data key="summary">SRC-014, secondary report on countdown and WHACKD speculation.</data>
+    </node>
+    <edge id="e001" source="article_newsweek_q" target="claim_dms_31tb">
+      <data key="relation">reports_prior_public_claim</data>
+      <data key="provenance_role">secondary</data>
+      <data key="confidence">Medium</data>
+      <data key="source_ids">SRC-004</data>
+      <data key="notes">Claim was publicly reported; data cache and release mechanism remain unverified.</data>
+    </edge>
+    <edge id="e002" source="account_mcafee_twitter" target="claim_dms_31tb">
+      <data key="relation">reported_as_original_channel</data>
+      <data key="provenance_role">inference</data>
+      <data key="confidence">Medium</data>
+      <data key="source_ids">SRC-004;SRC-017</data>
+      <data key="notes">Original account attribution is media-reported; direct original tweet archive not accepted as a candidate in this pass.</data>
+    </edge>
+    <edge id="e003" source="account_mcafee_twitter" target="claim_whackd_suicide">
+      <data key="relation">reported_as_original_channel</data>
+      <data key="provenance_role">secondary</data>
+      <data key="confidence">Medium</data>
+      <data key="source_ids">SRC-004;SRC-023</data>
+      <data key="notes">Useful claim provenance; not proof of DMS activation or cause of death.</data>
+    </edge>
+    <edge id="e004" source="domain_getwhackd" target="contract_whackd_official">
+      <data key="relation">lists_contract_address</data>
+      <data key="provenance_role">primary</data>
+      <data key="confidence">High</data>
+      <data key="source_ids">SRC-008</data>
+      <data key="notes">Official WHACKD site corroborates the contract address.</data>
+    </edge>
+    <edge id="e005" source="contract_whackd_official" target="tx_whackd_creation">
+      <data key="relation">created_by_transaction</data>
+      <data key="provenance_role">primary</data>
+      <data key="confidence">High</data>
+      <data key="source_ids">SRC-010;SRC-011</data>
+      <data key="notes">Public blockchain explorer evidence for the official contract creation.</data>
+    </edge>
+    <edge id="e006" source="contract_whackd_official" target="wallet_zero_address">
+      <data key="relation">burns_tokens_to</data>
+      <data key="provenance_role">primary</data>
+      <data key="confidence">High</data>
+      <data key="source_ids">SRC-010;SRC-013</data>
+      <data key="notes">Zero address activity is expected burn behavior, not a DMS signal by itself.</data>
+    </edge>
+    <edge id="e007" source="account_mcafee_instagram" target="claim_instagram_q_dms">
+      <data key="relation">reported_post_death_artifact</data>
+      <data key="provenance_role">secondary</data>
+      <data key="confidence">Medium</data>
+      <data key="source_ids">SRC-004;SRC-005</data>
+      <data key="notes">Post existence was reported; DMS trigger interpretation is weak and unauthenticated.</data>
+    </edge>
+    <edge id="e008" source="claim_instagram_q_dms" target="claim_dms_31tb">
+      <data key="relation">speculatively_connected_to</data>
+      <data key="provenance_role">unsupported</data>
+      <data key="confidence">Low</data>
+      <data key="source_ids">SRC-004;SRC-005</data>
+      <data key="notes">No public cryptographic link or authenticated release chain found.</data>
+    </edge>
+    <edge id="e009" source="domain_britbonglogpost" target="archive_britbong_20210624">
+      <data key="relation">captured_by_archive</data>
+      <data key="provenance_role">primary</data>
+      <data key="confidence">High</data>
+      <data key="source_ids">SRC-016</data>
+      <data key="notes">Public archive proves site content existed at the capture time.</data>
+    </edge>
+    <edge id="e010" source="domain_britbonglogpost" target="claim_britbong_countdown">
+      <data key="relation">hosted_countdown_claim</data>
+      <data key="provenance_role">primary</data>
+      <data key="confidence">High</data>
+      <data key="source_ids">SRC-014;SRC-015;SRC-016</data>
+      <data key="notes">Site existence and timing are verified; McAfee control remains unverified.</data>
+    </edge>
+    <edge id="e011" source="claim_britbong_countdown" target="contract_whackd_official">
+      <data key="relation">publicly_linked_to_whackd</data>
+      <data key="provenance_role">secondary</data>
+      <data key="confidence">Medium</data>
+      <data key="source_ids">SRC-014;SRC-016</data>
+      <data key="notes">Reported/captured link to WHACKD; not evidence the countdown was authentic.</data>
+    </edge>
+    <edge id="e012" source="claim_britbong_countdown" target="claim_dms_31tb">
+      <data key="relation">speculatively_connected_to</data>
+      <data key="provenance_role">unsupported</data>
+      <data key="confidence">Low</data>
+      <data key="source_ids">SRC-014;SRC-015;SRC-016</data>
+      <data key="notes">No public authentication ties the countdown to McAfee or a data cache.</data>
+    </edge>
+    <edge id="e013" source="file_surfside_fake_image" target="claim_surfside_31tb">
+      <data key="relation">debunked_as_fake</data>
+      <data key="provenance_role">secondary</data>
+      <data key="confidence">High</data>
+      <data key="source_ids">SRC-017</data>
+      <data key="notes">Known false lead excluded from candidates.</data>
+    </edge>
+    <edge id="e014" source="article_politifact_surfside" target="claim_surfside_31tb">
+      <data key="relation">fact_checks</data>
+      <data key="provenance_role">secondary</data>
+      <data key="confidence">High</data>
+      <data key="source_ids">SRC-017</data>
+      <data key="notes">Fact-check source for rejection.</data>
+    </edge>
+    <edge id="e015" source="contract_whackd_copycat_2021" target="claim_copycat_whackd">
+      <data key="relation">used_in_speculation</data>
+      <data key="provenance_role">unsupported</data>
+      <data key="confidence">Low</data>
+      <data key="source_ids">SRC-012;SRC-013</data>
+      <data key="notes">Later WHACKD-like contracts require separate provenance and are not treated as official.</data>
+    </edge>
+    <edge id="e016" source="article_snowkid_medium" target="contract_whackd_official">
+      <data key="relation">analyzes_airdrops_and_liquidity</data>
+      <data key="provenance_role">inference</data>
+      <data key="confidence">Medium</data>
+      <data key="source_ids">SRC-012</data>
+      <data key="notes">Useful community analysis; inferred wallet labels are not accepted as McAfee attribution.</data>
+    </edge>
+    <edge id="e017" source="claim_swarm_ipfs_payload" target="contract_whackd_official">
+      <data key="relation">possible_later_decode_theory</data>
+      <data key="provenance_role">unsupported</data>
+      <data key="confidence">Speculative</data>
+      <data key="source_ids">SRC-020;SRC-021;SRC-022</data>
+      <data key="notes">Swarm/IPFS references are technical formats to test only after provenance and on-chain reconstruction produce candidate strings.</data>
+    </edge>
+    <edge id="e018" source="article_bitcoin_britbong" target="claim_britbong_countdown">
+      <data key="relation">reports_public_circulation</data>
+      <data key="provenance_role">secondary</data>
+      <data key="confidence">Medium</data>
+      <data key="source_ids">SRC-014</data>
+      <data key="notes">Secondary news report confirms public circulation of the countdown story.</data>
+    </edge>
+  </graph>
+</graphml>
