@@ -24,8 +24,8 @@ The current assessment:
 
 | Path | Purpose |
 |---|---|
-| [`mcafee-dms-report-and-decoding-plan.md`](mcafee-dms-report-and-decoding-plan.md) | Main report: evidence summary, confidence matrix, timeline, WHACKD mechanics, and technical decoding plan. |
-| [`mcafee-dms-report-and-decoding-plan.html`](mcafee-dms-report-and-decoding-plan.html) | Browser-readable version of the main report. |
+| [`mcafee-dms-report-and-decoding-plan.md`](reports/mcafee-dms-report-and-decoding-plan.md) | Main report: evidence summary, confidence matrix, timeline, WHACKD mechanics, and technical decoding plan. |
+| [`mcafee-dms-report-and-decoding-plan.html`](reports/mcafee-dms-report-and-decoding-plan.html) | Browser-readable version of the main report. |
 | [`mcafee-dms-provenance/provenance-map-report.html`](mcafee-dms-provenance/provenance-map-report.html) | Provenance map report for the accepted and rejected leads. |
 | [`mcafee-dms-provenance/confidence_ranked_timeline.md`](mcafee-dms-provenance/confidence_ranked_timeline.md) | Event timeline with confidence levels and source IDs. |
 | [`mcafee-dms-provenance/decode_candidates.md`](mcafee-dms-provenance/decode_candidates.md) | Shortlist of public artifacts worth technical analysis. |
