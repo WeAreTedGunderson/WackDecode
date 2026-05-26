@@ -31,6 +31,10 @@ The current assessment:
 | [`reports/mcafee-dms-provenance/decode_candidates.md`](reports/mcafee-dms-provenance/decode_candidates.md) | Shortlist of public artifacts worth technical analysis. |
 | [`reports/mcafee-dms-provenance/sources.csv`](reports/mcafee-dms-provenance/sources.csv) | Source ledger with URLs, source IDs, and provenance metadata. |
 | [`reports/mcafee-dms-provenance/evidence_graph.graphml`](reports/mcafee-dms-provenance/evidence_graph.graphml) | GraphML evidence graph for external graph tools. |
+| [`reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md`](reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md) | Current WHACKD Option 2 reconstruction notes, run commands, source alignment, and full-burn findings. |
+| [`reports/mcafee-dms-provenance/whackd_reconstruction.py`](reports/mcafee-dms-provenance/whackd_reconstruction.py) | Reproducible script for exporting Transfer logs, grouping transactions, and reconstructing the direct-transfer counter model. |
+| [`reports/mcafee-dms-provenance/option2-data/`](reports/mcafee-dms-provenance/option2-data/) | Initial smoke-run output tables for blocks `8943162` through `8944000`. |
+| [`reports/mcafee-dms-provenance/option2-data-8945000/`](reports/mcafee-dms-provenance/option2-data-8945000/) | Larger sweep output tables for blocks `8943162` through `8945000`, including the first exact full-burn candidate. |
 | [`.agents/skills/osint/`](.agents/skills/osint/) | Local OSINT skill pack used to structure public-source investigation work. |
 
 ## The Operating Principle
@@ -56,7 +60,14 @@ These are not proven payloads. They are the current public artifacts that are re
 - Contract name reported by Etherscan: `Epstein`
 - Status: high confidence for artifact identity, low confidence for any DMS payload interpretation.
 
-Next useful work: reconstruct contract calls, distinguish `transfer` from `transferFrom`, rebuild the burn counter, and stop treating "every 1000th transaction" as a magic spell until the counting rule is defined.
+Current technical progress:
+
+- Option 2 reconstruction has started in [`whackd_reconstruction.py`](reports/mcafee-dms-provenance/whackd_reconstruction.py), with notes in [`option2_whackd_reconstruction_notes.md`](reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md).
+- A smoke run over blocks `8943162` through `8944000` produced `631` Transfer logs and `316` grouped transactions in [`option2-data/`](reports/mcafee-dms-provenance/option2-data/).
+- A larger sweep over blocks `8943162` through `8945000` produced `2,989` Transfer logs, `1,495` grouped transactions, `1,491` direct WHACKD contract transactions, `3` external-contract transactions, and `1` exact full-burn candidate in [`option2-data-8945000/`](reports/mcafee-dms-provenance/option2-data-8945000/).
+- The first exact full-burn candidate is transaction `0x8be7bd5924e3393c730a8edd8dae23915896d9e1ff33cae1c3cd696bc2bd3abd` at block `8944493`, timestamp `2019-11-16 12:56:33 UTC`, direct transfer ordinal `1000`, with `random_before=999` and `random_after=0`.
+
+Next useful work: add trace support for external-contract rows, continue larger range reconstruction after the trace boundary is handled, keep `transferFrom` separate from direct `transfer`, and test bounded candidate strings only from reproducible full-burn rows.
 
 ### AC-002: `britbonglogpost.com`
 
@@ -101,6 +112,15 @@ reports/mcafee-dms-provenance/confidence_ranked_timeline.md
 reports/mcafee-dms-provenance/sources.csv
 ```
 
+Then check the current Option 2 reconstruction layer:
+
+```text
+reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md
+reports/mcafee-dms-provenance/whackd_reconstruction.py
+reports/mcafee-dms-provenance/option2-data/
+reports/mcafee-dms-provenance/option2-data-8945000/
+```
+
 If you use graph tooling, open:
 
 ```text
@@ -137,16 +157,38 @@ Do not use it to:
 
 The conspiracy-industrial complex wants your attention. Evidence wants your discipline.
 
+## Current Technical Progress
+
+The defensible next phase, WHACKD blockchain reconstruction, is now underway. The current reproducible artifacts are:
+
+- [`option2_whackd_reconstruction_notes.md`](reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md): run notes, source alignment, classification rules, and current findings.
+- [`whackd_reconstruction.py`](reports/mcafee-dms-provenance/whackd_reconstruction.py): script for fetching Transfer logs, grouping transactions, classifying burn behavior, and modeling the direct-transfer counter.
+- [`option2-data/`](reports/mcafee-dms-provenance/option2-data/): smoke-run tables for blocks `8943162` through `8944000`.
+- [`option2-data-8945000/`](reports/mcafee-dms-provenance/option2-data-8945000/): larger sweep tables for blocks `8943162` through `8945000`.
+
+The larger sweep found one exact full-burn candidate before counter certainty becomes incomplete:
+
+| Field | Value |
+|---|---|
+| Transaction | `0x8be7bd5924e3393c730a8edd8dae23915896d9e1ff33cae1c3cd696bc2bd3abd` |
+| Block | `8944493` |
+| Timestamp | `2019-11-16 12:56:33 UTC` |
+| Direct transfer ordinal | `1000` |
+| Counter state | `random_before=999`, `random_after=0` |
+| Burn raw value | `11972156190000000000000` |
+| Non-burn raw value | `0` |
+
+Source alignment currently supports this rule boundary: direct `transfer(address,uint256)` calls mutate the `random` counter, while `transferFrom(address,address,uint256)` branches on `random` but does not increment or reset it. External-contract calls that emit WHACKD logs need trace-level decoding before later counter state can be treated as exact.
+
 ## Next Technical Work
 
-The most defensible next phase is WHACKD blockchain reconstruction:
+The next phase should tighten the counter reconstruction before any payload tests:
 
-1. Export all transactions involving the official WHACKD contract.
-2. Decode calldata into `transfer`, `transferFrom`, `approve`, and other calls.
-3. Reconstruct the internal counter used by the burn logic.
-4. Compare reconstructed state against archive-node storage reads where possible.
-5. Build a reproducible event table for normal burns and full burns.
-6. Test any proposed message/key derivation against strict anti-cherry-picking rules.
+1. Add trace support for external-contract rows if `trace_transaction` or `debug_traceTransaction` is available.
+2. Run progressively larger block ranges after the trace boundary is handled.
+3. Keep direct `transfer` and `transferFrom` activity in separate tables.
+4. Compare the grouped Transfer-log behavior against the verified or mirrored contract source.
+5. Use `full_burn_candidates.csv` as the only starting point for bounded candidate-string tests.
 
 A decoding theory is only worth keeping if someone else can reproduce it from the same public inputs and get the same output without knowing the desired answer first.
 
