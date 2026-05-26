@@ -246,10 +246,12 @@ Current progress:
 - The reconstruction scaffold is implemented in [`whackd_reconstruction.py`](mcafee-dms-provenance/whackd_reconstruction.py).
 - Current run notes, source alignment, and next-work notes are in [`option2_whackd_reconstruction_notes.md`](mcafee-dms-provenance/option2_whackd_reconstruction_notes.md).
 - A smoke run over blocks `8943162` through `8944000` produced `631` Transfer logs and `316` grouped transactions in [`option2-data/`](mcafee-dms-provenance/option2-data/).
-- A larger sweep over blocks `8943162` through `8945000` produced `2,989` Transfer logs, `1,495` grouped transactions, `1,491` direct WHACKD contract transactions, `3` external-contract transactions, and `1` exact full-burn candidate in [`option2-data-8945000/`](mcafee-dms-provenance/option2-data-8945000/).
-- The first exact full-burn candidate is transaction `0x8be7bd5924e3393c730a8edd8dae23915896d9e1ff33cae1c3cd696bc2bd3abd` at block `8944493`, timestamp `2019-11-16 12:56:33 UTC`, direct transfer ordinal `1000`, with `random_before=999`, `random_after=0`, burn raw value `11972156190000000000000`, and non-burn raw value `0`.
+- A larger sweep over blocks `8943162` through `8945000` produced `2,989` Transfer logs, `1,495` grouped transactions, `3` trace-resolved internal `transferFrom` calls, and `1` exact full-burn candidate in [`option2-data-8945000/`](mcafee-dms-provenance/option2-data-8945000/).
+- An extended sweep over blocks `8943162` through `8950000` produced `10,043` Transfer logs, `5,022` grouped transactions, `17` traced internal WHACKD calls, and `5` exact full-burn candidates in [`option2-data-8950000/`](mcafee-dms-provenance/option2-data-8950000/).
+- The first exact full-burn candidate is transaction `0x8be7bd5924e3393c730a8edd8dae23915896d9e1ff33cae1c3cd696bc2bd3abd` at block `8944493`, timestamp `2019-11-16 12:56:33 UTC`, token transfer ordinal `1000`, with `random_before=999`, `random_after=0`, burn raw value `11972156190000000000000`, and non-burn raw value `0`.
+- A bounded candidate-string screen over the five exact rows generated `60` deterministic strings and found `0` specific public-reference format matches. Broad hash-shaped matches are recorded as non-evidence in [`bounded_candidate_format_tests.csv`](mcafee-dms-provenance/option2-data-8950000/bounded_candidate_format_tests.csv).
 
-Source alignment currently supports this boundary: direct `transfer(address,uint256)` calls mutate the `random` counter, while `transferFrom(address,address,uint256)` branches on `random` but does not increment or reset it. External-contract calls that emit WHACKD logs need trace-level decoding before later counter state can be treated as exact.
+Source alignment currently supports this boundary: token-level `transfer(address,uint256)` calls mutate the `random` counter, while `transferFrom(address,address,uint256)` branches on `random` but does not increment or reset it. External-contract calls that emit WHACKD logs are trace-resolved when supported; unresolved rows must be treated as a counter-certainty boundary.
 
 Deliverables:
 
