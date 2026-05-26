@@ -1,0 +1,28 @@
+{
+  "contract": "0xcf8335727b776d190f9d15a54e6b9b9348439eee",
+  "creation_block": 8943162,
+  "from_block": 8943162,
+  "to_block": 8950000,
+  "rpc_url": "https://ethereum.publicnode.com",
+  "transfer_log_count": 10043,
+  "transaction_count": 5022,
+  "direct_contract_transaction_count": 5004,
+  "external_contract_transaction_count": 0,
+  "traced_internal_contract_transaction_count": 17,
+  "trace_mode": "auto",
+  "trace_token_call_count": 17,
+  "counter_certainty": "exact_for_resolved_token_calls",
+  "counter_relevant_transaction_count": 5021,
+  "token_transfer_count": 5005,
+  "direct_transfer_count": 5004,
+  "transfer_from_count": 16,
+  "expected_full_burn_count": 5,
+  "observed_full_burn_candidate_count": 5,
+  "full_burn_candidate_file_count": 5,
+  "classification_counts": {
+    "full_burn_candidate": 5,
+    "mixed_transfer_and_burn_candidate": 5016,
+    "nonburn_transfer": 1
+  },
+  "generated_at_utc": "2026-05-26 02:57:11 UTC"
+}
