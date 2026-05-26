@@ -24,17 +24,17 @@ The current assessment:
 
 | Path | Purpose |
 |---|---|
-| [`reports/mcafee-dms-report-and-decoding-plan.md`](reports/mcafee-dms-report-and-decoding-plan.md) | Main report: evidence summary, confidence matrix, timeline, WHACKD mechanics, and technical decoding plan. |
-| [`reports/mcafee-dms-report-and-decoding-plan.html`](reports/mcafee-dms-report-and-decoding-plan.html) | Browser-readable version of the main report. |
-| [`reports/mcafee-dms-provenance/provenance-map-report.html`](reports/mcafee-dms-provenance/provenance-map-report.html) | Provenance map report for the accepted and rejected leads. |
-| [`reports/mcafee-dms-provenance/confidence_ranked_timeline.md`](reports/mcafee-dms-provenance/confidence_ranked_timeline.md) | Event timeline with confidence levels and source IDs. |
-| [`reports/mcafee-dms-provenance/decode_candidates.md`](reports/mcafee-dms-provenance/decode_candidates.md) | Shortlist of public artifacts worth technical analysis. |
-| [`reports/mcafee-dms-provenance/sources.csv`](reports/mcafee-dms-provenance/sources.csv) | Source ledger with URLs, source IDs, and provenance metadata. |
-| [`reports/mcafee-dms-provenance/evidence_graph.graphml`](reports/mcafee-dms-provenance/evidence_graph.graphml) | GraphML evidence graph for external graph tools. |
-| [`reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md`](reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md) | Current WHACKD Option 2 reconstruction notes, run commands, source alignment, and full-burn findings. |
-| [`reports/mcafee-dms-provenance/whackd_reconstruction.py`](reports/mcafee-dms-provenance/whackd_reconstruction.py) | Reproducible script for exporting Transfer logs, grouping transactions, and reconstructing the direct-transfer counter model. |
-| [`reports/mcafee-dms-provenance/option2-data/`](reports/mcafee-dms-provenance/option2-data/) | Initial smoke-run output tables for blocks `8943162` through `8944000`. |
-| [`reports/mcafee-dms-provenance/option2-data-8945000/`](reports/mcafee-dms-provenance/option2-data-8945000/) | Larger sweep output tables for blocks `8943162` through `8945000`, including the first exact full-burn candidate. |
+| [`mcafee-dms-report-and-decoding-plan.md`](mcafee-dms-report-and-decoding-plan.md) | Main report: evidence summary, confidence matrix, timeline, WHACKD mechanics, and technical decoding plan. |
+| [`mcafee-dms-report-and-decoding-plan.html`](mcafee-dms-report-and-decoding-plan.html) | Browser-readable version of the main report. |
+| [`mcafee-dms-provenance/provenance-map-report.html`](mcafee-dms-provenance/provenance-map-report.html) | Provenance map report for the accepted and rejected leads. |
+| [`mcafee-dms-provenance/confidence_ranked_timeline.md`](mcafee-dms-provenance/confidence_ranked_timeline.md) | Event timeline with confidence levels and source IDs. |
+| [`mcafee-dms-provenance/decode_candidates.md`](mcafee-dms-provenance/decode_candidates.md) | Shortlist of public artifacts worth technical analysis. |
+| [`mcafee-dms-provenance/sources.csv`](mcafee-dms-provenance/sources.csv) | Source ledger with URLs, source IDs, and provenance metadata. |
+| [`mcafee-dms-provenance/evidence_graph.graphml`](mcafee-dms-provenance/evidence_graph.graphml) | GraphML evidence graph for external graph tools. |
+| [`mcafee-dms-provenance/option2_whackd_reconstruction_notes.md`](mcafee-dms-provenance/option2_whackd_reconstruction_notes.md) | Current WHACKD Option 2 reconstruction notes, run commands, source alignment, and full-burn findings. |
+| [`mcafee-dms-provenance/whackd_reconstruction.py`](mcafee-dms-provenance/whackd_reconstruction.py) | Reproducible script for exporting Transfer logs, grouping transactions, and reconstructing the direct-transfer counter model. |
+| [`mcafee-dms-provenance/option2-data/`](mcafee-dms-provenance/option2-data/) | Initial smoke-run output tables for blocks `8943162` through `8944000`. |
+| [`mcafee-dms-provenance/option2-data-8945000/`](mcafee-dms-provenance/option2-data-8945000/) | Larger sweep output tables for blocks `8943162` through `8945000`, including the first exact full-burn candidate. |
 | [`.agents/skills/osint/`](.agents/skills/osint/) | Local OSINT skill pack used to structure public-source investigation work. |
 
 ## The Operating Principle
@@ -62,9 +62,9 @@ These are not proven payloads. They are the current public artifacts that are re
 
 Current technical progress:
 
-- Option 2 reconstruction has started in [`whackd_reconstruction.py`](reports/mcafee-dms-provenance/whackd_reconstruction.py), with notes in [`option2_whackd_reconstruction_notes.md`](reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md).
-- A smoke run over blocks `8943162` through `8944000` produced `631` Transfer logs and `316` grouped transactions in [`option2-data/`](reports/mcafee-dms-provenance/option2-data/).
-- A larger sweep over blocks `8943162` through `8945000` produced `2,989` Transfer logs, `1,495` grouped transactions, `1,491` direct WHACKD contract transactions, `3` external-contract transactions, and `1` exact full-burn candidate in [`option2-data-8945000/`](reports/mcafee-dms-provenance/option2-data-8945000/).
+- Option 2 reconstruction has started in [`whackd_reconstruction.py`](mcafee-dms-provenance/whackd_reconstruction.py), with notes in [`option2_whackd_reconstruction_notes.md`](mcafee-dms-provenance/option2_whackd_reconstruction_notes.md).
+- A smoke run over blocks `8943162` through `8944000` produced `631` Transfer logs and `316` grouped transactions in [`option2-data/`](mcafee-dms-provenance/option2-data/).
+- A larger sweep over blocks `8943162` through `8945000` produced `2,989` Transfer logs, `1,495` grouped transactions, `1,491` direct WHACKD contract transactions, `3` external-contract transactions, and `1` exact full-burn candidate in [`option2-data-8945000/`](mcafee-dms-provenance/option2-data-8945000/).
 - The first exact full-burn candidate is transaction `0x8be7bd5924e3393c730a8edd8dae23915896d9e1ff33cae1c3cd696bc2bd3abd` at block `8944493`, timestamp `2019-11-16 12:56:33 UTC`, direct transfer ordinal `1000`, with `random_before=999` and `random_after=0`.
 
 Next useful work: add trace support for external-contract rows, continue larger range reconstruction after the trace boundary is handled, keep `transferFrom` separate from direct `transfer`, and test bounded candidate strings only from reproducible full-burn rows.
@@ -101,30 +101,30 @@ Next useful work: locate original post archives, preserve timestamps, and treat 
 Start here:
 
 ```text
-reports/mcafee-dms-report-and-decoding-plan.md
+mcafee-dms-report-and-decoding-plan.md
 ```
 
 Then check the provenance layer:
 
 ```text
-reports/mcafee-dms-provenance/decode_candidates.md
-reports/mcafee-dms-provenance/confidence_ranked_timeline.md
-reports/mcafee-dms-provenance/sources.csv
+mcafee-dms-provenance/decode_candidates.md
+mcafee-dms-provenance/confidence_ranked_timeline.md
+mcafee-dms-provenance/sources.csv
 ```
 
 Then check the current Option 2 reconstruction layer:
 
 ```text
-reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md
-reports/mcafee-dms-provenance/whackd_reconstruction.py
-reports/mcafee-dms-provenance/option2-data/
-reports/mcafee-dms-provenance/option2-data-8945000/
+mcafee-dms-provenance/option2_whackd_reconstruction_notes.md
+mcafee-dms-provenance/whackd_reconstruction.py
+mcafee-dms-provenance/option2-data/
+mcafee-dms-provenance/option2-data-8945000/
 ```
 
 If you use graph tooling, open:
 
 ```text
-reports/mcafee-dms-provenance/evidence_graph.graphml
+mcafee-dms-provenance/evidence_graph.graphml
 ```
 
 The HTML reports are included so the investigation can be read without a Markdown renderer.
@@ -161,10 +161,10 @@ The conspiracy-industrial complex wants your attention. Evidence wants your disc
 
 The defensible next phase, WHACKD blockchain reconstruction, is now underway. The current reproducible artifacts are:
 
-- [`option2_whackd_reconstruction_notes.md`](reports/mcafee-dms-provenance/option2_whackd_reconstruction_notes.md): run notes, source alignment, classification rules, and current findings.
-- [`whackd_reconstruction.py`](reports/mcafee-dms-provenance/whackd_reconstruction.py): script for fetching Transfer logs, grouping transactions, classifying burn behavior, and modeling the direct-transfer counter.
-- [`option2-data/`](reports/mcafee-dms-provenance/option2-data/): smoke-run tables for blocks `8943162` through `8944000`.
-- [`option2-data-8945000/`](reports/mcafee-dms-provenance/option2-data-8945000/): larger sweep tables for blocks `8943162` through `8945000`.
+- [`option2_whackd_reconstruction_notes.md`](mcafee-dms-provenance/option2_whackd_reconstruction_notes.md): run notes, source alignment, classification rules, and current findings.
+- [`whackd_reconstruction.py`](mcafee-dms-provenance/whackd_reconstruction.py): script for fetching Transfer logs, grouping transactions, classifying burn behavior, and modeling the direct-transfer counter.
+- [`option2-data/`](mcafee-dms-provenance/option2-data/): smoke-run tables for blocks `8943162` through `8944000`.
+- [`option2-data-8945000/`](mcafee-dms-provenance/option2-data-8945000/): larger sweep tables for blocks `8943162` through `8945000`.
 
 The larger sweep found one exact full-burn candidate before counter certainty becomes incomplete:
 
